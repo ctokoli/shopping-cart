@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_21_002313) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_01_234748) do
+  create_table "carts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "line_items", force: :cascade do |t|
+    t.integer "product_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_line_items_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -20,4 +32,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_002313) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "line_items", "products"
 end
