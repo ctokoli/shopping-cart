@@ -21,8 +21,9 @@ class LineItemsController < ApplicationController
 
   # POST /line_items or /line_items.json
   def create
+    @line_items = LineItem.all
     product = Product.find(params[:product_id])
-    @line_item = @cart.line_items.build(product:)
+    @line_item = add_product(product)
 
     respond_to do |format|
       if @line_item.save
@@ -59,6 +60,17 @@ class LineItemsController < ApplicationController
       format.html { redirect_to line_items_url, notice: 'Line item was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def add_product(product)
+    current_product = @line_items.find_by(product_id: product.id)
+    if current_product
+       current_product.quantity += 1
+    else
+      current_product = @cart.line_items.build(product_id: product.id)
+      current_product.quantity = (current_product.quantity || 1)
+    end
+    current_product
   end
 
   private
